@@ -3,13 +3,18 @@ package com.photoeditorsdk.android.app
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import ly.img.android.IMGLY
+import ly.img.android.i
 import ly.img.android.pesdk.PhotoEditorSettingsList
 import ly.img.android.pesdk.assets.filter.basic.FilterPackBasic
 import ly.img.android.pesdk.assets.font.basic.FontPackBasic
@@ -22,15 +27,16 @@ import ly.img.android.pesdk.backend.model.constant.OutputMode
 import ly.img.android.pesdk.backend.model.state.LoadSettings
 import ly.img.android.pesdk.backend.model.state.PhotoEditorSaveSettings
 import ly.img.android.pesdk.ui.activity.PhotoEditorBuilder
-import ly.img.android.pesdk.ui.model.state.UiConfigFilter
-import ly.img.android.pesdk.ui.model.state.UiConfigFrame
-import ly.img.android.pesdk.ui.model.state.UiConfigOverlay
-import ly.img.android.pesdk.ui.model.state.UiConfigSticker
-import ly.img.android.pesdk.ui.model.state.UiConfigText
+import ly.img.android.pesdk.ui.model.state.*
 import ly.img.android.pesdk.ui.panels.item.PersonalStickerAddItem
 import ly.img.android.serializer._3.IMGLYFileWriter
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+
 
 class KEditorDemoActivity : Activity() {
 
@@ -70,13 +76,47 @@ class KEditorDemoActivity : Activity() {
             it.outputMode = OutputMode.EXPORT_IF_NECESSARY
         }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val openGallery = findViewById<Button>(R.id.openGallery)
+        var imgView = findViewById<ImageView>(R.id.img_view)
+
+        val clz = Class.forName("ly.img.android.e")
+        val m: Method = clz.getDeclaredMethod("f")
+        m.isAccessible = true
+        val var12 = m.invoke(null)
+        val var13 = var12 as Bitmap
+        imgView.setImageBitmap(var13)
 
         openGallery.setOnClickListener {
+            IMGLY.initSDK(this)
+            IMGLY.authorize();
+            //1.获取字节码对象
+            val clz = Class.forName("ly.img.android.b")
+            val m: Method = clz.getDeclaredMethod("a")
+            m.isAccessible = true
+            val var12 = m.invoke(null)
+            // 对象
+            val var13 = var12 as ly.img.android.b
+
+            val method: Method = var13.javaClass.getDeclaredMethod("a", ly.img.android.b.a.b.javaClass)
+            method.isAccessible = true
+            val r = method.invoke(var13, ly.img.android.b.a.b)
+
+            val g1: Field = clz.getDeclaredField("l")
+            var g2: Field = clz.getDeclaredField("m")
+            g1.isAccessible = true
+            g2.isAccessible = true
+            var peG = g1.get(null)
+            var veG = g2.get(null)
+            val clz2 = Class.forName("ly.img.android.g")
+            var oF = clz2.getDeclaredField("o")
+            oF.isAccessible = true
+            oF.modifiers = oF.modifiers and (invModifier.FINAL)
+
             openSystemGalleryToSelectAnImage()
         }
     }
